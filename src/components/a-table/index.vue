@@ -3,17 +3,17 @@
   <el-table :data="props.tableData" style="width: 100%" :stripe="stripe" :border="border" :height="height"
     @selection-change="handleSelectionChange" :span-method="spanMethod">
     <el-table-column type="selection" width="55" v-if="props.isSelection" />
-    <template v-for="item in props.tableLable" :key="item.prop">
+    <template v-for="item in props.tableLable">
       <!-- 插槽 -->
       <el-table-column :prop="item.prop" :label="item.lable" :fixed="item.fixed" :width="item.width"
-        :sortable="item.sortable" v-if="item.type == 'slot'">
+        :sortable="item.sortable" v-if="item.type == 'slot'" :key="item.prop">
         <template #default="scope">
           <slot :name="item.slotName" :data="scope.row"></slot>
         </template>
       </el-table-column>
       <!-- 显示图片 -->
       <el-table-column :prop="item.prop" :label="item.lable" :fixed="item.fixed" :width="item.width"
-        :sortable="item.sortable" v-else-if="item.type == 'image'">
+        :sortable="item.sortable" v-else-if="item.type == 'image'" :key="item.prop + 1">
         <template #default="scope">
           <el-image :style="{ width: '50px', height: '50px' }" fit="cover" :src="scope.row[item.prop][0]"
             :preview-src-list="scope.row[item.prop]" :preview-teleported="true" />
@@ -21,7 +21,7 @@
       </el-table-column>
       <!-- tag -->
       <el-table-column :prop="item.prop" :label="item.lable" :fixed="item.fixed" :width="item.width"
-        :sortable="item.sortable" v-else-if="item.type == 'tag'">
+        :sortable="item.sortable" v-else-if="item.type == 'tag'" :key="item.prop + 2">
         <template #default="scope">
           <el-tag :type="item.tagType[scope.row[item.prop]]">
             <span v-html="item.callBack && item.callBack(scope.row)" v-if="item.callBack"></span>
@@ -31,14 +31,14 @@
       </el-table-column>
       <!-- function 需要过滤的数据 -->
       <el-table-column :prop="item.prop" :label="item.lable" :fixed="item.fixed" :width="item.width"
-        :sortable="item.sortable" v-else-if="item.type == 'function'">
+        :sortable="item.sortable" v-else-if="item.type == 'function'" :key="item.prop + 3">
         <template #default="scope">
           <div v-html="item.callBack && item.callBack(scope.row)"></div>
         </template>
       </el-table-column>
       <!-- 其他 -->
       <el-table-column :prop="item.prop" :label="item.lable" :fixed="item.fixed" :width="item.width"
-        :show-overflow-tooltip='true' :sortable="item.sortable" v-else />
+        :show-overflow-tooltip='true' :sortable="item.sortable" v-else :key="item.prop + 4" />
     </template>
   </el-table>
 </template>

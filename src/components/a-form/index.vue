@@ -1,15 +1,15 @@
 <template>
   <el-form ref="ruleFormRef" :model="form_data" :label-width="form_config.labelWidth" :size="form_config.formSize"
     :label-position="form_config.labelPosition" :status-icon="form_config.statusIcon">
-    <template v-for="item in form_config.props" :key="item.prop">
+    <template v-for="item in form_config.props">
       <!-- Input组件 -->
-      <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Input'">
+      <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Input'" :key="item.prop">
         <el-input v-model="form_data[item.prop]" :disabled="item.disabled" :placeholder="item.message"
           :clearable="item.clearable" :show-password="item.showPassword" :formatter="item.formatter"
           :parser="item.parser" :type="item.textarea ? 'textarea' : ''" :rows="item.rows || 2" />
       </el-form-item>
       <!-- select组件 -->
-      <el-form-item :label="item.label" :prop="item.prop" v-else-if="item.type === 'Select'">
+      <el-form-item :label="item.label" :prop="item.prop" v-else-if="item.type === 'Select'" :key="item.prop + 1">
         <el-select v-model="form_data[item.prop]" :disabled="item.disabled" :clearable="item.clearable"
           :filterable="item.filterable" :multiple="item.multiple" :collapse-tags="item.collapseTags"
           :placeholder="item.message" size="large">
