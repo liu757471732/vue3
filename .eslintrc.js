@@ -15,7 +15,8 @@ module.exports = {
       'vue/no-unused-vars': "off",
       'vue/no-v-for-template-key': 'off',
       "no-undef": 'off',
-      "vue/no-mutating-props":'off'
+      "vue/no-mutating-props":'off',
+      "vue/multi-word-component-names":'off'
     },
     parserOptions: {
       parser: 'babel-eslint'
