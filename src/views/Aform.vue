@@ -46,7 +46,7 @@ const data = reactive({
         // }
 
       },
-      // select组件的配置
+      // select组件的配置   远程搜索并未封装
       {
         type: 'Select',
         // size: 'large',
@@ -54,7 +54,7 @@ const data = reactive({
         label: '学校',
         aValue: 'id',
         aLabel: 'title',
-        // filterable:true, //下拉框的筛选
+        // filterable: true, //下拉框的筛选可以输入的形势
         // disabled: false, //  禁用下拉框
         // clearable: true, //清空选项
         // multiple: true,  //  下拉框的多选
