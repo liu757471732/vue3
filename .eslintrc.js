@@ -16,7 +16,11 @@ module.exports = {
       'vue/no-v-for-template-key': 'off',
       "no-undef": 'off',
       "vue/no-mutating-props":'off',
-      "vue/multi-word-component-names":'off'
+      "vue/multi-word-component-names":'off',
+      "vue/no-template-key": 'off',
+      "vue/valid-v-for":'off',
+      "vue/no-v-model-argument":'off',
+      "no-unused-vars":'off',
     },
     parserOptions: {
       parser: 'babel-eslint'

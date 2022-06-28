@@ -5,9 +5,16 @@
 <script setup>
 import AForm from '@/components/a-form'
 import { reactive } from 'vue'
+
 const data = reactive({
   form_data: {
-    name: ''
+    name: '',
+    school: '',
+    address: '',
+    fruits: [],
+    time: '',
+    trip: 0,
+    url: [],
   },
   form_config: {
     // 是否使用icon图片 默认叉叉
@@ -42,6 +49,7 @@ const data = reactive({
       // select组件的配置
       {
         type: 'Select',
+        // size: 'large',
         prop: 'school',
         label: '学校',
         aValue: 'id',
@@ -74,7 +82,142 @@ const data = reactive({
             english: 'BQDX'
           }
         ],
-        message: '请输入名称'
+        message: '请选择学校'
+      },
+      {
+        type: 'Cascader',
+        prop: 'address',
+        label: '地区',
+        // 级联选择器的属性配置
+        props: {
+          // expandTrigger: 'hover',   //选择项的方式
+          // multiple: true,  //是否多选
+          // checkStrictly: true,  //选择级联的任意一项
+        },
+        filterable: true,
+        // showAllLevels: false, //仅显示最后一项
+        // clearable:true,  //可清空该选项
+        options: [
+          {
+            value: '0',
+            label: '湖北',
+            children: [
+              {
+                value: '1',
+                label: '武汉',
+                children: [
+                  {
+                    value: '2',
+                    label: '江岸区',
+                    // disabled: true,   //disabled 会自动禁用这一行选项
+                  },
+                  {
+                    value: '3',
+                    label: '江汉区',
+                  },
+                  {
+                    value: '4',
+                    label: '汉阳区',
+                  },
+                  {
+                    value: '5',
+                    label: '武昌区',
+                  },
+                ],
+              },
+              {
+                value: '6',
+                label: '黄石',
+                children: [
+                  {
+                    value: '7',
+                    label: '黄石港区',
+                  },
+                  {
+                    value: '8',
+                    label: '下陆区',
+                  },
+                ],
+              },
+            ],
+          }
+        ],
+        message: '请选择地区',
+      },
+      // Checkbox多选框
+      {
+        type: 'Checkbox',
+        prop: 'fruits',
+        label: '水果',
+        // border:true, //border带边框的勾选框 
+        // checkButton: true, //是否显示but按钮
+        // min: 1,   //最少勾选
+        // max: 2,  //最大勾选
+        options: [
+          {
+            label: '苹果',
+            // disabled: true,  //是否禁用当前选项
+          },
+          {
+            label: '菠萝'
+          },
+          {
+            label: '葡萄'
+          }
+        ]
+      },
+      // 日期时间选择器
+      {
+        type: 'Date',
+        prop: 'time',
+        state: 'date',  //使用什么时间控件
+        label: '日期',
+        valueFormat: "YYYY-MM-DD",
+        // 禁止选用的时间
+        // disabledDate: (time) => {
+        //   return time.getTime() < Date.now() - 3600 * 1000 * 24
+        // },
+        // shortcuts: [
+        //   {
+        //     text: '今天',
+        //     value: new Date(),
+        //   },
+        //   {
+        //     text: '昨天',
+        //     value: () => {
+        //       const date = new Date()
+        //       date.setTime(date.getTime() - 3600 * 1000 * 24)
+        //       return date
+        //     },
+        //   },
+        //   {
+        //     text: '一周前',
+        //     value: () => {
+        //       const date = new Date()
+        //       date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+        //       return date
+        //     },
+        //   },
+        // ],
+        message: '请选择日期',
+      },
+      {
+        type: 'Radio',
+        prop: 'trip',
+        label: '出行方式',
+        aValue: 'id',
+        aLabel: 'title',
+        options: [
+          { id: 0, title: '汽车' },
+          { id: 1, title: '自行车' },
+          { id: 2, title: '步行' }
+        ]
+      },
+      {
+        type: 'Upload',
+        prop: 'url',
+        state: 'button', //上传分为图片上传和文件上传 button 文件上传 card  图片上传
+        label: '上传',
       },
     ],
     btnList: [
@@ -97,6 +240,9 @@ const data = reactive({
     ]
   }
 })
+
+
+
 // 传递过去的方法最后form表单提交
 const formSubmit = (val) => {
   console.log(val, '发送请求')
