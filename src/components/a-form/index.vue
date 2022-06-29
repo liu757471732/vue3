@@ -60,8 +60,9 @@
         </el-form-item>
 
         <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Upload'" :key="item.prop">
-          <el-upload v-model:file-list="fileList" :list-type="item.listType">
-            <el-button type="primary" v-if="item.state=='button'">上传</el-button>
+          <el-upload v-model:file-list="form_data[item.prop]" class="upload-demo" :list-type="item.listType"
+            :http-request="handleUpload">
+            <el-button class="ml-3" type="primary" v-if="item.state=='button'">上传</el-button>
             <template v-else>
               <el-icon>
                 <Plus />
@@ -79,7 +80,7 @@
   </el-form>
 </template>
 <script setup>
-
+import client from '@/utils/oss'
 import { Plus } from '@element-plus/icons-vue'
 import zhcn from 'element-plus/lib/locale/lang/zh-cn'
 import { defineProps, ref } from 'vue'
@@ -126,7 +127,30 @@ const btnSubmit = (val) => {
 
 }
 
+const handleUpload = (file) => {
+  const tmpcnt = file.file.name.lastIndexOf(".")
+  const exname = file.file.name.substring(tmpcnt + 1)
+  const names = ['jpg', 'jpeg', 'webp', 'png', 'bmp']
+  if (names.indexOf(exname) < 0) {
+    this.$message.error("不支持的格式!")
+    return
+  }
+  const fileName = '/packaging/' + file.file.name
+  client.put(fileName, file.file).then(res => {
+    if (res.url) {
+      this.url.push(res.url)
+    } else {
+      this.$message.error('文件上传失败')
+    }
+  }).catch(error => {
+    console.log(error)
+  })
+}
+
 
 </script>
 <style lang='scss' scoped>
+.upload-demo {
+  width: 100%;
+}
 </style>
