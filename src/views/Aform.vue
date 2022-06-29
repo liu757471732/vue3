@@ -37,6 +37,15 @@ const data = reactive({
         // clearable: true,  //是否允许清空
         // showPassword: false,  //是否允许清空
         message: '请输入名称',
+        // col: 6,  //占多少行
+        // width: '300px',
+        rules: [
+          {
+            required: true,
+            message: '请输入名称',
+            trigger: 'blur',
+          }
+        ]
         // plus  新增 过滤数据
         // formatter: (value) => {
         //   return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -82,7 +91,16 @@ const data = reactive({
             english: 'BQDX'
           }
         ],
-        message: '请选择学校'
+        rules: [
+          {
+            required: true,
+            message: '请选择学校',
+            trigger: 'change',
+          }
+        ],
+        // width: '300px',
+        // col: 6,  //占多少行
+        // message: '请选择学校'
       },
       {
         type: 'Cascader',
@@ -142,6 +160,15 @@ const data = reactive({
             ],
           }
         ],
+        rules: [
+          {
+            required: true,
+            message: '请选择地区',
+            trigger: 'change',
+          }
+        ],
+        // width: '300px',
+        // col: 6,  //占多少行
         message: '请选择地区',
       },
       // Checkbox多选框
@@ -164,7 +191,15 @@ const data = reactive({
           {
             label: '葡萄'
           }
-        ]
+        ],
+        rules: [
+          {
+            required: true,
+            message: '请勾选水果',
+            trigger: 'change',
+          }
+        ],
+        // col: 6,  //占多少行
       },
       // 日期时间选择器
       {
@@ -199,6 +234,14 @@ const data = reactive({
         //     },
         //   },
         // ],
+        rules: [
+          {
+            required: true,
+            message: '请选择日期',
+            trigger: 'change',
+          }
+        ],
+        // col: 6,  //占多少行
         message: '请选择日期',
       },
       {
@@ -211,13 +254,16 @@ const data = reactive({
           { id: 0, title: '汽车' },
           { id: 1, title: '自行车' },
           { id: 2, title: '步行' }
-        ]
+        ],
+        // col: 6,  //占多少行
       },
       {
         type: 'Upload',
         prop: 'url',
         state: 'button', //上传分为图片上传和文件上传 button 文件上传 card  图片上传
         label: '上传',
+        // listType: 'picture-card',
+        // col: 6,  //占多少行
       },
     ],
     btnList: [
