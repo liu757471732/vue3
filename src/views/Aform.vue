@@ -15,6 +15,7 @@ const data = reactive({
     time: '',
     trip: 0,
     url: [],
+    urlText: []
   },
   form_config: {
     // 是否使用icon图片 默认叉叉
@@ -238,7 +239,7 @@ const data = reactive({
           {
             required: true,
             message: '请选择日期',
-            trigger: 'change',
+            trigger: 'blu',
           }
         ],
         // col: 6,  //占多少行
@@ -262,8 +263,34 @@ const data = reactive({
         prop: 'url',
         state: 'button', //上传分为图片上传和文件上传 button 文件上传 card  图片上传
         label: '上传',
+        limit: 6, //最多上传多少张图片
         // listType: 'picture-card',
         // col: 6,  //占多少行
+        rules: [
+          {
+            required: true,
+            message: '请输上传文件',
+            trigger: 'blur',
+          }
+        ]
+      },
+      {
+        type: 'Upload',
+        prop: 'urlText',
+        state: 'card', //上传分为图片上传和文件上传 button 文件上传 card  图片上传
+        label: '上传',
+        listType: 'picture-card',
+        limit: 6, //最多上传多少张图片
+        // col: 6,  //占多少行
+        hint: '最多上传6张图片并且不超过2M',  //提示文字
+        // accept: ['.jpg', '.png'],  //只上传什么类型的文件
+        rules: [
+          {
+            required: true,
+            message: '请输上传文件',
+            trigger: 'blur',
+          }
+        ]
       },
     ],
     btnList: [

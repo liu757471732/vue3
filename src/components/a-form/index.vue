@@ -54,21 +54,30 @@
         <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Radio'" :key="item.prop"
           :rules="item.rules">
           <el-radio-group v-model="form_data[item.prop]">
-            <el-radio :label="el.value || el[item.aValue]" v-for="el in item.options" :key="el.value">{{el.label ||
-            el[item.aLabel]}}</el-radio>
+            <el-radio :label="el.value || el[item.aValue]" v-for="el in item.options" :key="el.value">{{ el.label ||
+                el[item.aLabel]
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Upload'" :key="item.prop">
-          <el-upload v-model:file-list="form_data[item.prop]" class="upload-demo" :list-type="item.listType"
-            :http-request="handleUpload">
+        <el-form-item :label="item.label" :prop="item.prop" v-if="item.type === 'Upload'" :key="item.prop"
+          :rules="item.rules">
+          <el-upload class="upload-demo" :list-type="item.listType" :limit="item.limit || 1"
+            :http-request="handleUpload(item.prop)" :on-remove="handleRemove(item.prop)"
+            :on-preview="handlePictureCardPreview" :accept="item.accept" :before-upload="beforeAvatarUpload">
             <el-button class="ml-3" type="primary" v-if="item.state=='button'">上传</el-button>
             <template v-else>
               <el-icon>
                 <Plus />
               </el-icon>
             </template>
+            <template #tip>
+              <div class="el-upload__tip">
+                {{item.hint}}
+              </div>
+            </template>
           </el-upload>
+
         </el-form-item>
       </el-col>
     </el-row>
@@ -77,10 +86,14 @@
         <el-button :type="el.color" @click="btnSubmit(el.type)">{{ el.label }}</el-button>
       </template>
     </el-form-item>
+    <el-dialog v-model="dialogVisible" center>
+      <img :src="dialogImageUrl" alt="Preview Image" />
+    </el-dialog>
   </el-form>
 </template>
 <script setup>
 import client from '@/utils/oss'
+import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import zhcn from 'element-plus/lib/locale/lang/zh-cn'
 import { defineProps, ref } from 'vue'
@@ -100,7 +113,8 @@ const props = defineProps({
 
 const ruleFormRef = ref(null)
 const local = ref(zhcn)
-const fileList = ref([])
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
 
 
 const btnSubmit = (val) => {
@@ -127,30 +141,74 @@ const btnSubmit = (val) => {
 
 }
 
-const handleUpload = (file) => {
-  const tmpcnt = file.file.name.lastIndexOf(".")
-  const exname = file.file.name.substring(tmpcnt + 1)
-  const names = ['jpg', 'jpeg', 'webp', 'png', 'bmp']
-  if (names.indexOf(exname) < 0) {
-    this.$message.error("不支持的格式!")
-    return
-  }
-  const fileName = '/packaging/' + file.file.name
-  client.put(fileName, file.file).then(res => {
-    if (res.url) {
-      this.url.push(res.url)
-    } else {
-      this.$message.error('文件上传失败')
+const handleUpload = (val) => {
+  return (file) => {
+    const tmpcnt = file.file.name.lastIndexOf(".")
+    const exname = file.file.name.substring(tmpcnt + 1)
+    const names = ['jpg', 'jpeg', 'webp', 'png', 'bmp']
+    if (names.indexOf(exname) < 0) {
+      this.$message.error("不支持的格式!")
+      return
     }
-  }).catch(error => {
-    console.log(error)
-  })
+    const fileName = '/packaging/' + file.file.name
+    client.put(fileName, file.file).then(res => {
+      if (res.url) {
+        props.form_data[val].push(res.url)
+      } else {
+        this.$message.error('文件上传失败')
+      }
+    }).catch(error => {
+      console.log(error)
+    })
+  }
 }
 
+const handleRemove = (val) => {
+  return (file) => {
+    client.delete('/packaging/' + file.name).then((res) => {
+      let { res: { requestUrls: requestUrls } } = res
+      requestUrls.forEach(el => {
+        props.form_data[val] = props.form_data[val].filter((i) => {
+          return i != el
+        })
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+}
+
+const handlePictureCardPreview = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url
+  dialogVisible.value = true
+}
+
+
+const beforeAvatarUpload = (rawFile) => {
+  if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('大小不能超过2MB!')
+    return false
+  } else {
+    return true
+  }
+}
 
 </script>
 <style lang='scss' scoped>
 .upload-demo {
   width: 100%;
+}
+
+::v-deep .el-upload--picture-card {
+  --el-upload-picture-card-size: 120px
+}
+
+::v-deep .el-upload-list--picture-card .el-upload-list__item {
+  width: 120px !important;
+  height: 120px !important;
+}
+
+::v-deep .el-dialog__body {
+  overflow: auto;
 }
 </style>
